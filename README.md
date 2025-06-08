@@ -2,6 +2,8 @@
 
 日記のサンプルプログラム（画面）
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9c3800e1-0921-47ec-8fc7-5d5cf56f1900/deploy-status)](https://app.netlify.com/projects/diary-sample/deploys)
+
 # vue.js
 
 This template should help get you started developing with Vue 3 in Vite.
