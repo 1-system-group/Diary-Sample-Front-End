@@ -19,5 +19,4 @@ import Footer from './views/FooterView.vue'
   </v-app>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

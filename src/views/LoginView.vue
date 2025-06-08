@@ -7,7 +7,11 @@ const rememberMe = ref(false)
 
 const login = () => {
   // Login logic would go here
-  console.log('Login attempt', { email: email.value, password: password.value, rememberMe: rememberMe.value })
+  console.log('Login attempt', {
+    email: email.value,
+    password: password.value,
+    rememberMe: rememberMe.value,
+  })
 }
 </script>
 
@@ -19,9 +23,7 @@ const login = () => {
         <span class="text-h5 font-weight-bold">LOGIN</span>
       </div>
 
-      <div class="text-subtitle-1 mb-2">
-        アカウント情報を入力してください
-      </div>
+      <div class="text-subtitle-1 mb-2">アカウント情報を入力してください</div>
 
       <v-divider class="mb-4"></v-divider>
 
@@ -62,13 +64,7 @@ const login = () => {
         </div>
 
         <div class="mb-4">
-          <v-btn
-            type="submit"
-            color="#2b2b2b"
-            class="px-4"
-          >
-            ログイン
-          </v-btn>
+          <v-btn type="submit" color="#2b2b2b" class="px-4"> ログイン </v-btn>
         </div>
 
         <div>

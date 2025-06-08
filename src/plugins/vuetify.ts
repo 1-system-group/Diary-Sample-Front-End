@@ -16,7 +16,7 @@ const lightTheme = {
     info: '#2196F3',
     success: '#4CAF50',
     warning: '#FFC107',
-  }
+  },
 }
 
 export default createVuetify({
@@ -26,7 +26,7 @@ export default createVuetify({
     defaultTheme: 'lightTheme',
     themes: {
       lightTheme,
-    }
+    },
   },
   icons: {
     defaultSet: 'mdi',

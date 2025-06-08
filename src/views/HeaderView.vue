@@ -1,5 +1,4 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <v-app-bar color="#393944" dark app>
@@ -9,5 +8,4 @@
   </v-app-bar>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
