@@ -1,0 +1,35 @@
+{
+  "name": "nuxt-diary-app",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint . --fix",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "@nuxt/eslint": "^0.7.4",
+    "@pinia/nuxt": "^0.5.5",
+    "nuxt": "^3.14.159",
+    "pinia": "^2.2.6",
+    "vue": "^3.5.13",
+    "vuetify": "^3.8.2"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "^1.6.0",
+    "@types/node": "^22.13.9",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.5.0",
+    "eslint": "^9.21.0",
+    "eslint-plugin-vue": "~10.0.0",
+    "prettier": "3.5.3",
+    "typescript": "~5.8.0",
+    "node-fetch": "^3.x"
+  }
+}
