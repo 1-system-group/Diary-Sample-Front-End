@@ -82,3 +82,11 @@ table.account_list td {
 .user_email {
     color: rgb(38, 8, 209) !important;
 }
+
+table.account_list  {
+    border: 1px solid #dee2e6;
+}
+
+.table-bordered td, .table-bordered th {
+    border: 1px solid #dee2e6;
+}

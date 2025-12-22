@@ -1,47 +1,48 @@
 import {useEffect, useRef, useState} from 'react'
-import { Modal } from 'bootstrap';
+import { Modal } from 'bootstrap'
 
-function UnlockButton({lockOut, id}) {
+function UnlockButton({lockOut, userId, unlockYes}) {
 
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState(false)
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleClose = () => setShow(false)
+    const handleShow = () => setShow(true)
     
 
-    const modalRef = useRef();
+    const modalRef = useRef()
     
-    let modalInstance = null;
+    let modalInstance = null
 
     const handleShowModal = () => {
-        modalInstance = new Modal(modalRef.current);
-        modalInstance.show();
-    };
-
-
-    const handleCloseModal = () => {
-      if (modalInstance) {
-        modalInstance.hide();
-      } else {
-        // fallback: Bootstrapがdata-bs-dismissを使って閉じる
-        const modalEl = modalRef.current;
-        const instance = Modal.getInstance(modalEl);
-        if (instance) {
-            instance.hide();
-        }
-      }
-    };
-
-
-    const clickUnlockYes = () => {
-        // ロック解除のAPI呼び出しは未実装状態
-        // とりあえず、"いいえ"ボタン押下時と同様にモーダルを閉じるだけにしておく
-        handleCloseModal();
+        modalInstance = new Modal(modalRef.current)
+        modalInstance.show()
     }
 
 
-    if (lockOut) {
-      return null;
+    const handleCloseModal = () => {
+        if (modalInstance) {
+            modalInstance.hide()
+        } else {
+            // fallback: Bootstrapがdata-bs-dismissを使って閉じる
+            const modalEl = modalRef.current
+            const instance = Modal.getInstance(modalEl)
+            if (instance) {
+                instance.hide()
+            }
+        }
+    }
+
+
+    const clickUnlockYes = async () => {
+        // ロック解除のAPI呼び出しは未実装状態
+        await unlockYes(userId)
+        // モーダルを閉じるだけにしておく
+        handleCloseModal()
+    }
+
+    // ロックアウトのものだけを対象（ボタン表示）にする
+    if (!lockOut) {
+      return null
     }
 
     return (
@@ -76,7 +77,7 @@ function UnlockButton({lockOut, id}) {
                 </div>
             </div>
         </div>
-    );
+    )
 }
 
-export default UnlockButton;
+export default UnlockButton

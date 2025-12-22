@@ -3,10 +3,10 @@ import ManageItem from '../../types/Manage.js'
 import UnlockButton from './UnlockButton.js'
 import Header from './Header.js'
 import Footer from './Footer.js'
-import '../../css/manage.css'
 import '../../css/bootstrap.css'
 import '../../js/bootstrap.js'
 import '../../css/style.css'
+import '../../css/manage.css'
 
 function Manage() {
 
@@ -22,26 +22,94 @@ function Manage() {
         lockOut: null,
     }]
 
+    // 一覧の表示データ
     const [list, setList] = useState([])
+    // 最大ページ数
     const [pageNum, setPageNum] = useState(0)
+    // 現在のページ
     const [nowPage, setNowPage] = useState(0)
     const [existPrevPage, setExistPrevPage] = useState(true)
     const [existNextPage, setExistNextPage] = useState(true)
 
+    const apiUrl = "https://localhost"
+    const apiPort = "44349"
     
+    //TODO 認証はいったん無しにしておく
+    const token = ""
+
+    const apiGetRequest = async (url) => {
+        try {
+            const response = await fetch(url, {
+                method: "GET",
+                credentials: "include",
+                "Authorization": `Bearer ${token}`,
+             })
+             const json = await response.json()
+             return json
+        } catch (error) {
+            //TODO エラー処理を入れる
+            console.error("API通信：" + error)
+        }
+    }
+
+    const apiPostRequest = async (url, body) => {
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                body: body,
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                "Authorization": `Bearer ${token}`,
+            })
+            const json = await response.json()
+            return json
+        } catch (error) {
+            //TODO エラー処理を入れる
+            console.error("API通信：" + error)
+        }
+    }
+
+    const unlockYes = async (id) => {
+        const body = JSON.stringify(id)
+        const apiResponse = await apiPostRequest( `${apiUrl}:${apiPort}/api/v1/ManageApi/Unlock`, body)
+        const jsonResponse = JSON.parse(apiResponse)
+        const jsonUsers = jsonResponse.Users
+        const jsonNowPage = jsonResponse.Page.NowPage
+        const jsonTotalPageNumber = jsonResponse.Page.TotalPageNumber
+        setList(jsonUsers)
+        setPageNum(jsonTotalPageNumber)
+        setNowPage(jsonNowPage)
+    }
+
+     const getList = async () => {
+         const apiResponse = await apiGetRequest(`${apiUrl}:${apiPort}/api/v1/ManageApi/Index`)
+         const jsonResponse = JSON.parse(apiResponse)
+         const jsonUsers = jsonResponse.Users
+         const jsonNowPage = jsonResponse.Page.NowPage
+         const jsonTotalPageNumber = jsonResponse.Page.TotalPageNumber
+         setList(jsonUsers)
+         setPageNum(jsonTotalPageNumber)
+         setNowPage(jsonNowPage)
+     }
+
+    const clickPaging = async (e, pageNum) => {
+
+        // ページ遷移を防ぐ
+        e.preventDefault()
+
+        const apiResponse = await apiGetRequest(`${apiUrl}:${apiPort}/api/v1/ManageApi/Paging?page=${pageNum}`)
+        const jsonResponse = JSON.parse(apiResponse)
+        const jsonUsers = jsonResponse.Users
+        const jsonNowPage = jsonResponse.Page.NowPage
+        const jsonTotalPageNumber = jsonResponse.Page.TotalPageNumber
+        setList(jsonUsers)
+        setPageNum(jsonTotalPageNumber)
+        setNowPage(jsonNowPage)
+    }
+
+    // 画面表示時	
     useEffect(() => {
-    
-        // まだAPI通信を入れていないので、画面表示項目は動作確認用に、useEffect()内で固定値を入れている状態です。
-        const localList = [
-        {no:'1', userId:'101', userName: 'あいうえお', email: 'test@gmail.com', emailConfirmed: null, telNo: '070-1111-2222', lockStatus: true, failCount: '2', lockOut: true },
-        {no:'2', userId:'102', userName: 'かきくけこ', email: 'test2@gmail.com', emailConfirmed: 1, telNo: '070-3333-4444', lockStatus: null, failCount: '0', lockOut: false },
-        {no:'3', userId:'103', userName: 'さしすせそ', email: 'test3@gmail.com', emailConfirmed: 1, telNo: '070-5555-6666', lockStatus: null, failCount: '0', lockOut: false }
-        ]
-        setList(localList)
-
-        setPageNum(3)
-
-        setNowPage(1)  
+        getList()
     }, [])
     
     return (
@@ -76,16 +144,16 @@ function Manage() {
                                    {list.map(item => (
 
                                    <tr class="theme_account_content">
-                                           <td key={item.no}>{item.no}</td>
-                                           <td key={item.no}>{item.userId}</td>
-                                           <td key={item.no}>{item.userName}</td>
-                                           <td key={item.no}>{item.email}</td>
-                                           <td key={item.no}>{item.emailConfirmed === 1 ? '済' : '未'}</td>
-                                           <td key={item.no}>{item.telNo}</td>
-                                           <td key={item.no} className="px-4">
-                                             <UnlockButton lockOut={item.lockOut} no={item.userId} />
+                                           <td>-</td>
+                                           <td>{item.Id}</td>
+                                           <td>{item.UserName}</td>
+                                           <td>{item.Email}</td>
+                                           <td>{item.EmailConfirmed === 1 ? '済' : '未'}</td>
+                                           <td>{item.PhoneNumber}</td>
+                                           <td className="px-4">
+                                                 <UnlockButton lockOut={item.LockOut} userId={item.Id} unlockYes={unlockYes} />
                                            </td>
-                                           <td key={item.no}>{item.fail_count}</td>
+                                           <td key={item.Id}>{item.AccessFailedCount}</td>
                                    </tr>
                                    ))}
 
@@ -102,19 +170,19 @@ function Manage() {
                                <ul class="pagination justify-content-end">
                            {existPrevPage ?
                                    <li class="page-item">
-                                       <a class="page-link text-secondary" >&lt;&lt;</a>
+                                       <a class="page-link text-secondary" onClick={(e) => clickPaging(e, 1)}>&lt;&lt;</a>
                                    </li>
                            : null}
                            {Array.from({ length: pageNum }, (_, i) => {
                                if ((i + 1) === nowPage) {
-                                   return <li class="page-item"><a class="page-link manage_theme" >{i + 1}</a></li>
+                                   return <li class="page-item"><a class="page-link manage_theme" onClick={(e) => clickPaging(e, i + 1)}>{i + 1}</a></li>
                                } else {
-                                   return <li class="page-item"><a class="page-link text-secondary" >{i + 1}</a></li>
+                                   return <li class="page-item"><a class="page-link text-secondary" onClick={(e) => clickPaging(e, i + 1)}>{i + 1}</a></li>
                                }
                            })}
                            {existNextPage ?
                                    <li class="page-item">
-                                       <a class="page-link text-secondary" >&gt;&gt;</a>
+                                       <a class="page-link text-secondary" onClick={(e) => clickPaging(e, pageNum)} >&gt;&gt;</a>
                                    </li>
                            : null}
                                </ul>
@@ -125,7 +193,7 @@ function Manage() {
            </div>
            <Footer/>
        </div>
-    );
+    )
 }
 
-export default Manage;
+export default Manage
