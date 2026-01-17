@@ -51,7 +51,9 @@
         </div>
 
         <div>
-          <a href="#" class="text-decoration-none text-primary">パスワードをお忘れですか？</a>
+          <NuxtLink to="/forgot-password" class="text-decoration-none text-primary">
+            パスワードをお忘れですか？
+          </NuxtLink>
         </div>
       </form>
     </div>
