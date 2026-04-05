@@ -1,4 +1,5 @@
 import {useEffect, useRef, useState} from 'react'
+import { useNavigate } from "react-router-dom"
 import ManageItem from '../../types/Manage.js'
 import UnlockButton from './UnlockButton.js'
 import Header from './Header.js'
@@ -9,6 +10,8 @@ import '../../css/style.css'
 import '../../css/manage.css'
 
 function Manage() {
+
+    const navigate = useNavigate()
 
     const defaultList:ManageItem[] = [{
         no : null,
@@ -106,6 +109,10 @@ function Manage() {
         setPageNum(jsonTotalPageNumber)
         setNowPage(jsonNowPage)
     }
+    
+    const newEntry = () => {
+        navigate("/NewEntry");
+    }
 
     // 画面表示時	
     useEffect(() => {
@@ -150,7 +157,7 @@ function Manage() {
                                            <td>{item.Email}</td>
                                            <td>{item.EmailConfirmed === 1 ? '済' : '未'}</td>
                                            <td>{item.PhoneNumber}</td>
-                                           <td className="px-4">
+                                           <td className="px-4">{item.LockOut}
                                                  <UnlockButton lockOut={item.LockOut} userId={item.Id} unlockYes={unlockYes} />
                                            </td>
                                            <td key={item.Id}>{item.AccessFailedCount}</td>
@@ -163,7 +170,7 @@ function Manage() {
                        </div>
                        <div class="row">
                            <div class="col-2">
-                               <button id="newEntry" class="btn btn-sm manage_theme" >登録</button>
+                               <button id="newEntry" class="btn btn-sm manage_theme" onClick={newEntry}>登録</button>
                            </div>
                            
                            <div class="col-10">
