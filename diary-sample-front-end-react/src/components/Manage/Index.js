@@ -4,9 +4,11 @@ import ManageItem from '../../types/Manage.js'
 import UnlockButton from './UnlockButton.js'
 import Header from './Header.js'
 import Footer from './Footer.js'
-import '../../css/bootstrap.css'
-import '../../js/bootstrap.js'
-import '../../css/style.css'
+
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.min.js'
+import 'bootstrap-icons/font/bootstrap-icons.css'
+
 import '../../css/manage.css'
 
 function Manage() {
@@ -33,7 +35,10 @@ function Manage() {
     const [nowPage, setNowPage] = useState(0)
     const [existPrevPage, setExistPrevPage] = useState(true)
     const [existNextPage, setExistNextPage] = useState(true)
+    // 一覧の件数
+    const [listCount, setListCount] = useState([])
 
+    //TODO APIのURLはいったんここでローカルホストを指定しておく
     const apiUrl = "https://localhost"
     const apiPort = "44349"
     
@@ -50,7 +55,7 @@ function Manage() {
              const json = await response.json()
              return json
         } catch (error) {
-            //TODO エラー処理を入れる
+            //TODO エラー処理を入れる。とりあえずログだけ出しておく
             console.error("API通信：" + error)
         }
     }
@@ -67,7 +72,7 @@ function Manage() {
             const json = await response.json()
             return json
         } catch (error) {
-            //TODO エラー処理を入れる
+            //TODO エラー処理を入れる。とりあえずログだけ出しておく
             console.error("API通信：" + error)
         }
     }
@@ -75,24 +80,12 @@ function Manage() {
     const unlockYes = async (id) => {
         const body = JSON.stringify(id)
         const apiResponse = await apiPostRequest( `${apiUrl}:${apiPort}/api/v1/ManageApi/Unlock`, body)
-        const jsonResponse = JSON.parse(apiResponse)
-        const jsonUsers = jsonResponse.Users
-        const jsonNowPage = jsonResponse.Page.NowPage
-        const jsonTotalPageNumber = jsonResponse.Page.TotalPageNumber
-        setList(jsonUsers)
-        setPageNum(jsonTotalPageNumber)
-        setNowPage(jsonNowPage)
+        responseCommon(apiResponse)
     }
 
      const getList = async () => {
          const apiResponse = await apiGetRequest(`${apiUrl}:${apiPort}/api/v1/ManageApi/Index`)
-         const jsonResponse = JSON.parse(apiResponse)
-         const jsonUsers = jsonResponse.Users
-         const jsonNowPage = jsonResponse.Page.NowPage
-         const jsonTotalPageNumber = jsonResponse.Page.TotalPageNumber
-         setList(jsonUsers)
-         setPageNum(jsonTotalPageNumber)
-         setNowPage(jsonNowPage)
+         responseCommon(apiResponse)
      }
 
     const clickPaging = async (e, pageNum) => {
@@ -101,15 +94,20 @@ function Manage() {
         e.preventDefault()
 
         const apiResponse = await apiGetRequest(`${apiUrl}:${apiPort}/api/v1/ManageApi/Paging?page=${pageNum}`)
-        const jsonResponse = JSON.parse(apiResponse)
+        responseCommon(apiResponse)
+    }
+    
+    const responseCommon = async (response) => {
+        const jsonResponse = JSON.parse(response)
         const jsonUsers = jsonResponse.Users
         const jsonNowPage = jsonResponse.Page.NowPage
         const jsonTotalPageNumber = jsonResponse.Page.TotalPageNumber
         setList(jsonUsers)
+        setListCount(jsonUsers.length)
         setPageNum(jsonTotalPageNumber)
         setNowPage(jsonNowPage)
     }
-    
+
     const newEntry = () => {
         navigate("/NewEntry");
     }
@@ -120,86 +118,90 @@ function Manage() {
     }, [])
     
     return (
-        /* headタグの要素はまだ */
         <div>
-           <Header/>
-           <h5>Manage/Index</h5>
-           <h3><img src="./../lib/bootstrap-icons/gear.svg" alt="" width="32" height="32" title="management"/>管理</h3>
-           <div>
-               <h4></h4>
-               <hr />
-               <div class="row">
-                   <div class="col-md-3">
-                       <ul class="nav nav-pills flex-column">
-                           <li class="nav-item"><a class="nav-link manage_theme" id="manage_account" asp-area="" asp-controller="Manage" asp-action="Index">アカウント管理</a></li>
-                       </ul>
-                   </div>
-                   <div class="col-md-9">
-                       <div class="row">
-                           <div class="col-md-12">
-                               <table class="table table-bordered table-hover account_list">
-                                   <tr className="theme_account_title">
-                                       <th className="no">No</th>
-                                       <th className="user_id">ユーザID</th>
-                                       <th className="user_name">ユーザ名</th>
-                                       <th className="email">Eメール</th>
-                                       <th className="reg_status">メール確認済</th>
-                                       <th className="tel_no">電話番号</th>
-                                       <th className="lock_status">ロック</th>
-                                       <th className="fail_count">ログイン失敗回数</th>
-                                   </tr>
-                                   {list.map(item => (
-
-                                   <tr class="theme_account_content">
-                                           <td>-</td>
-                                           <td>{item.Id}</td>
-                                           <td>{item.UserName}</td>
-                                           <td>{item.Email}</td>
-                                           <td>{item.EmailConfirmed === 1 ? '済' : '未'}</td>
-                                           <td>{item.PhoneNumber}</td>
-                                           <td className="px-4">{item.LockOut}
-                                                 <UnlockButton lockOut={item.LockOut} userId={item.Id} unlockYes={unlockYes} />
-                                           </td>
-                                           <td key={item.Id}>{item.AccessFailedCount}</td>
-                                   </tr>
-                                   ))}
-
-                               </table>
-                           </div>
-                           <input type="hidden" id="unlockId" name="unlockId" />
-                       </div>
-                       <div class="row">
-                           <div class="col-2">
-                               <button id="newEntry" class="btn btn-sm manage_theme" onClick={newEntry}>登録</button>
-                           </div>
-                           
-                           <div class="col-10">
-                               <ul class="pagination justify-content-end">
-                           {existPrevPage ?
-                                   <li class="page-item">
-                                       <a class="page-link text-secondary" onClick={(e) => clickPaging(e, 1)}>&lt;&lt;</a>
-                                   </li>
-                           : null}
-                           {Array.from({ length: pageNum }, (_, i) => {
-                               if ((i + 1) === nowPage) {
-                                   return <li class="page-item"><a class="page-link manage_theme" onClick={(e) => clickPaging(e, i + 1)}>{i + 1}</a></li>
-                               } else {
-                                   return <li class="page-item"><a class="page-link text-secondary" onClick={(e) => clickPaging(e, i + 1)}>{i + 1}</a></li>
-                               }
-                           })}
-                           {existNextPage ?
-                                   <li class="page-item">
-                                       <a class="page-link text-secondary" onClick={(e) => clickPaging(e, pageNum)} >&gt;&gt;</a>
-                                   </li>
-                           : null}
-                               </ul>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-           <Footer/>
-       </div>
+            <Header/>
+            <div class="container">
+                <main class="pb-3">
+                    <h3><img src="../../img/gear.svg" alt="" width="32" height="32" title="management"/>管理</h3>
+                    <div>
+                        <hr />
+                        <div className="row">
+                            <div className="col-md-3">
+                                <ul className="nav nav-pills flex-column">
+                                    <li className="nav-item"><a className="nav-link manage_theme" id="manage_account" asp-area="" asp-controller="Manage" asp-action="Index">アカウント管理</a></li>
+                                </ul>
+                            </div>
+                            <div className="col-md-9">
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <table className="table table-bordered table-hover account_list">
+                                            <tbody>
+                                                <tr key="trhead" className="theme_account_title">
+                                                    <th className="no">No</th>
+                                                    <th className="user_id">ユーザID</th>
+                                                    <th className="user_name">ユーザ名</th>
+                                                    <th className="email">Eメール</th>
+                                                    <th className="reg_status">メール確認済</th>
+                                                    <th className="tel_no">電話番号</th>
+                                                    <th className="lock_status">ロック</th>
+                                                    <th className="fail_count">ログイン失敗回数</th>
+                                                </tr>
+                                                {list.map((item, index) => {
+                                                    const rowNum = index + 1 + ((nowPage -1) * listCount)
+                                                    return (
+                                                        <tr key={item.Id} className="theme_account_content">
+                                                            <td>{rowNum}</td>
+                                                            <td>{item.Id}</td>
+                                                            <td>{item.UserName}</td>
+                                                            <td>{item.Email}</td>
+                                                            <td>{item.EmailConfirmed === true ? '済' : '未'}</td>
+                                                            <td>{item.PhoneNumber}</td>
+                                                            <td className="px-4">
+                                                                <UnlockButton lockOut={item.LockOut} userId={item.Id} displayMessage={item.DisplayLockOutDateTime} unlockYes={unlockYes} />
+                                                            </td>
+                                                            <td key={item.Id}>{item.AccessFailedCount}</td>
+                                                        </tr>
+                                                    )
+                                                    }
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <input type="hidden" id="unlockId" name="unlockId" />
+                                </div>
+                                <div className="row">
+                                    <div className="col-2">
+                                        <button id="newEntry" className="btn btn-sm manage_theme" onClick={newEntry}>登録</button>
+                                    </div>
+                                    <div className="col-10">
+                                        <ul className="pagination justify-content-end">
+                                            {existPrevPage ?
+                                                <li className="page-item">
+                                                    <a className="page-link text-secondary" onClick={(e) => clickPaging(e, 1)}>&lt;&lt;</a>
+                                                </li>
+                                            : null}
+                                            {Array.from({ length: pageNum }, (_, i) => {
+                                                if ((i + 1) === nowPage) {
+                                                    return <li className="page-item"><a className="page-link manage_theme" onClick={(e) => clickPaging(e, i + 1)}>{i + 1}</a></li>
+                                                } else {
+                                                    return <li className="page-item"><a className="page-link text-secondary" onClick={(e) => clickPaging(e, i + 1)}>{i + 1}</a></li>
+                                                }
+                                            })}
+                                            {existNextPage ?
+                                                <li className="page-item">
+                                                    <a className="page-link text-secondary" onClick={(e) => clickPaging(e, pageNum)} >&gt;&gt;</a>
+                                                </li>
+                                            : null}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        <Footer/>
+    </div>
     )
 }
 

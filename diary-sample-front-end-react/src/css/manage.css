@@ -5,6 +5,17 @@ body {
 ::selection {
     background: rgba(19, 94, 255, 0.411);
 }
+form {
+    display: inline;
+}
+.notification_theme_normal {
+    color:white;
+    background-color: rgb(103, 145, 209);
+}
+.notification_theme_error {
+    color: white;
+    background-color: rgb(255, 174, 181);
+}
 
 /**
 * 管理
@@ -19,28 +30,33 @@ body {
     color: white;
     border-color: rgb(0, 255, 255);
 }
-.manage_theme::selection {
-    color:white;
-}
 
 
 /**
 * アカウント一覧
 */
-.theme_account_title {
+.table tbody tr.theme_account_title th {
     font-family: "UD デジタル 教科書体 N-B", Arial, Helvetica, sans-serif, monospace;
     color:white;
     background-color: rgb(103, 145, 209);
 }
-.theme_account_title:hover{
+.table tbody tr.theme_account_title th:hover{
     color:white !important;
     background-color: rgb(103, 145, 209) !important;
 }
-.theme_account_content {
+.table tbody tr.theme_account_content td {
     font-family: "UD デジタル 教科書体 N-B", Arial, Helvetica, sans-serif, monospace;
     color:gray;
     background-color: rgb(238, 236, 223);
 }
+
+/* 一覧のヘッダがbootstrapの設定で、hoverで色が変わってしまうので、ここで無視するようにする */
+.table tbody tr.theme_account_title:hover th {
+  --bs-table-hover-bg: rgb(103, 145, 209) !important;
+  background-color: inherit !important;
+}
+
+
 table.account_list {
     font-size:10pt;
     border-collapse: collapse;
@@ -70,23 +86,27 @@ table.account_list th.lock_status {
 table.account_list th.fail_count {
     width: 10%;
 }
-table.account_list th {
-    font-family: "BIZ UDGothic", Arial, Helvetica, sans-serif, monospace;
-    font-weight: bold;
-}
-table.account_list td {
-    font-family: "BIZ UDGothic", Arial, Helvetica, sans-serif, monospace;
-    font-weight: bold;
-}
 
 .user_email {
     color: rgb(38, 8, 209) !important;
 }
-
-table.account_list  {
-    border: 1px solid #dee2e6;
+.password_explain {
+    font-size: 0.5rem;
 }
 
-.table-bordered td, .table-bordered th {
-    border: 1px solid #dee2e6;
+/* 以下はbootstrapでやってくれなくなっているので、独自で設定する */
+.mr-auto, .mx-auto {
+    margin-right: auto !important;
+}
+
+.nav-link {
+    color:rgba(255, 255, 255) !important;
+}
+
+.nav-link:hover {
+    color:rgba(255, 255, 255, .5) !important;
+}
+
+.form-group {
+    margin-bottom: 1rem;
 }
