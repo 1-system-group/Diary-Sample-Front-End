@@ -21,7 +21,8 @@ export default defineNuxtConfig({
 
   // Server configuration
   devServer: {
-    host: '127.0.0.1',
+    host: 'localhost',
+    port: 3000,
   },
 
   // Pinia configuration
@@ -31,4 +32,11 @@ export default defineNuxtConfig({
 
   // Compatibility date
   compatibilityDate: '2024-04-03',
+
+  // Runtime configuration
+  runtimeConfig: {
+    public: {
+      apiBaseUrl: process.env.DIARY_SAMPLE_BACKEND_BASE_URL || 'http://localhost:5000',
+    },
+  },
 })
