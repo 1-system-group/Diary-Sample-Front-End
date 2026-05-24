@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react'
 import { useNavigate } from "react-router-dom"
+import { APP_CONST } from "./constants"
 import ManageItem from '../../types/Manage.js'
 import UnlockButton from './UnlockButton.js'
 import Header from './Header.js'
@@ -11,6 +12,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 
 import '../../css/manage.css'
 
+// 管理画面（一覧）
 function Manage() {
 
     const navigate = useNavigate()
@@ -38,10 +40,6 @@ function Manage() {
     // 一覧の件数
     const [listCount, setListCount] = useState([])
 
-    //TODO APIのURLはいったんここでローカルホストを指定しておく
-    const apiUrl = "https://localhost"
-    const apiPort = "44349"
-    
     //TODO 認証はいったん無しにしておく
     const token = ""
 
@@ -55,8 +53,19 @@ function Manage() {
              const json = await response.json()
              return json
         } catch (error) {
-            //TODO エラー処理を入れる。とりあえずログだけ出しておく
+            //TODO エラー処理を入れる
+            // 今はとりあえずログだけ出して一覧ゼロ件で戻しておく
             console.error("API通信：" + error)
+            const errParam = {
+                Users:[],
+                Page:{
+                    PageCount:0,
+                    TotalNumber:0,
+                    NowPage:0,
+                    TotalPageNumber:0
+                }
+            }
+            return JSON.stringify(errParam)
         }
     }
 
@@ -72,28 +81,42 @@ function Manage() {
             const json = await response.json()
             return json
         } catch (error) {
-            //TODO エラー処理を入れる。とりあえずログだけ出しておく
+            //TODO エラー処理を入れる
+            // 今はとりあえずログだけ出して一覧ゼロ件で戻しておく
             console.error("API通信：" + error)
+            const errParam = {
+                Users:[],
+                Page:{
+                    PageCount:0,
+                    TotalNumber:0,
+                    NowPage:0,
+                    TotalPageNumber:0
+                }
+            }
+            return JSON.stringify(errParam)
         }
     }
 
+    // ロック解除
     const unlockYes = async (id) => {
         const body = JSON.stringify(id)
-        const apiResponse = await apiPostRequest( `${apiUrl}:${apiPort}/api/v1/ManageApi/Unlock`, body)
+        const apiResponse = await apiPostRequest( `${APP_CONST.API_URL}:${APP_CONST.API_PORT}/api/v1/ManageApi/Unlock`, body)
         responseCommon(apiResponse)
     }
 
-     const getList = async () => {
-         const apiResponse = await apiGetRequest(`${apiUrl}:${apiPort}/api/v1/ManageApi/Index`)
-         responseCommon(apiResponse)
-     }
+    // 一覧取得
+    const getList = async () => {
+        const apiResponse = await apiGetRequest(`${APP_CONST.API_URL}:${APP_CONST.API_PORT}/api/v1/ManageApi/Index`)
+        responseCommon(apiResponse)
+    }
 
+    // ページ移動
     const clickPaging = async (e, pageNum) => {
 
         // ページ遷移を防ぐ
         e.preventDefault()
 
-        const apiResponse = await apiGetRequest(`${apiUrl}:${apiPort}/api/v1/ManageApi/Paging?page=${pageNum}`)
+        const apiResponse = await apiGetRequest(`${APP_CONST.API_URL}:${APP_CONST.API_PORT}/api/v1/ManageApi/Paging?page=${pageNum}`)
         responseCommon(apiResponse)
     }
     

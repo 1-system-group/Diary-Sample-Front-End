@@ -1,11 +1,13 @@
 import {useEffect, useRef, useState} from 'react'
 import { useNavigate } from "react-router-dom"
+import { APP_CONST } from "./constants"
 import Header from './Header.js'
 import Footer from './Footer.js'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
 
+// 管理画面（登録）
 function NewEntry() {
 
     const navigate = useNavigate()
@@ -15,10 +17,6 @@ function NewEntry() {
     const [password1, setPassword1] = useState("")
     const [password2, setPassword2] = useState("")
 
-   //TODO APIのURLはいったんここでローカルホストを指定しておく
-    const apiUrl = "https://localhost"
-    const apiPort = "44349"
-    
     //TODO 認証はいったん無しにしておく
     const token = ""
 
@@ -38,38 +36,53 @@ function NewEntry() {
                 credentials: "include",
                 "Authorization": `Bearer ${token}`,
             })
+            // 200:OK以外の場合
+            if (!response.ok) {
+                //TODO エラー処理を入れる
+                // 今はとりあえずERROR扱いにして戻しておく
+                console.error("API通信: BAD REQUEST")
+                const errParam = {
+                    NotificationType: APP_CONST.NOTIFICATION_TYPE.ERROR
+                }
+                return JSON.stringify(errParam)
+            }
+            
             const json = await response.json()
             return json
         } catch (error) {
             //TODO エラー処理を入れる
+            // 今はとりあえずERROR扱いにして戻しておく
             console.error("API通信：" + error)
+            const errParam = {
+                NotificationType: APP_CONST.NOTIFICATION_TYPE.ERROR
+            }
+            return JSON.stringify(errParam)
         }
     }
-
 
     const create = async () => {
 
         const body = JSON.stringify(userEntity)
-        const apiResponse = await apiPostRequest( `${apiUrl}:${apiPort}/api/v1/ManageApi/Create`, body)
+        const apiResponse = await apiPostRequest( `${APP_CONST.API_URL}:${APP_CONST.API_PORT}/api/v1/ManageApi/Create`, body)
         const jsonResponse = JSON.parse(apiResponse)
 
-        //TODO 結果によって分岐
+        //TODO 過去の結果によって分岐させたい ----
         // バリデーションエラー
         // 登録成功
         // 登録失敗（登録済み）
         // 登録失敗（その他）
-        if (jsonResponse.NotificationType === 1) {
+        // ---------------------------
+        // とりあえず登録成功とエラーの場合で分岐させておく
+        if (jsonResponse.NotificationType === APP_CONST.NOTIFICATION_TYPE.NORMAL) {
           // Nomal
           // 登録成功の場合はアカウント一覧画面へ
           //TODO とりあえずログだけ出しておく
           console.log("Nomal")
-        } else if (jsonResponse.NotificationType === 3) {
+        } else if (jsonResponse.NotificationType === APP_CONST.NOTIFICATION_TYPE.ERROR) {
           // Error
           //TODO とりあえずログだけ出しておく
           console.log("Error")
         }
-
-//        navigate("/create")
     }
 
     const back = () => {
@@ -79,7 +92,6 @@ function NewEntry() {
     return (
         <div>
            <Header/>
-
              <div class="container">
                <main class="pb-3">
 
@@ -166,12 +178,10 @@ function NewEntry() {
                         </div>
                     </div>
                 </div>
-
              </main>
            </div>
          <Footer/>
        </div>
-
     )
 
 }
