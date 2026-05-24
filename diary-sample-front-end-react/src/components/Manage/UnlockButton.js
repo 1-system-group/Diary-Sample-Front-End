@@ -4,8 +4,6 @@ import { Modal } from 'bootstrap'
 // 解除ボタン（管理画面一覧）
 function UnlockButton({lockOut, userId, displayMessage, unlockYes}) {
 
-    const [show, setShow] = useState(false)
-
     const modalRef = useRef()
     
     let modalInstance = null

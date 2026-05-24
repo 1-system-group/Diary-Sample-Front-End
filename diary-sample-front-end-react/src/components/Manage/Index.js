@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from 'react'
 import { useNavigate } from "react-router-dom"
-import { APP_CONST } from "./constants"
+import { APP_CONST } from "./Constants"
 import ManageItem from '../../types/Manage.js'
 import UnlockButton from './UnlockButton.js'
 import Header from './Header.js'
