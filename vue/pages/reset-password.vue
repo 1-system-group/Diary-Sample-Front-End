@@ -11,17 +11,6 @@
       <v-divider class="mb-4" />
 
       <v-alert
-        v-if="successMessage"
-        type="success"
-        variant="tonal"
-        class="mb-4"
-        closable
-        @click:close="successMessage = ''"
-      >
-        {{ successMessage }}
-      </v-alert>
-
-      <v-alert
         v-if="errorMessage"
         type="error"
         variant="tonal"
@@ -32,7 +21,7 @@
         {{ errorMessage }}
       </v-alert>
 
-      <form @submit.prevent="handleSubmit">
+      <form @submit.prevent="onSubmit">
         <div class="mb-4">
           <label class="text-subtitle-2 mb-1 d-block">Eメール</label>
           <v-text-field
@@ -43,7 +32,7 @@
             hide-details="auto"
             class="reset-password-field"
             bg-color="white"
-            :rules="emailRules"
+            :error-messages="emailError"
             required
           />
         </div>
@@ -58,7 +47,7 @@
             hide-details="auto"
             class="reset-password-field"
             bg-color="white"
-            :rules="passwordRules"
+            :error-messages="passwordError"
             :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
             required
             @click:append-inner="showPassword = !showPassword"
@@ -75,7 +64,7 @@
             hide-details="auto"
             class="reset-password-field"
             bg-color="white"
-            :rules="passwordConfirmRules"
+            :error-messages="passwordConfirmError"
             :append-inner-icon="showPasswordConfirm ? 'mdi-eye-off' : 'mdi-eye'"
             required
             @click:append-inner="showPasswordConfirm = !showPasswordConfirm"
@@ -99,50 +88,58 @@
 </template>
 
 <script setup lang="ts">
-import { ERROR_MESSAGES, VALIDATION_MESSAGES } from '~/constants/messages'
+import { useField, useForm } from 'vee-validate'
+import { VALIDATION_MESSAGES } from '~/constants/messages'
 import { PAGE_TITLES } from '~/constants/page-titles'
 
 const route = useRoute()
 const code = computed(() => route.query.code as string)
 const email = computed(() => route.query.email as string)
 
-const emailInput = ref(email.value ?? '')
-const password = ref('')
-const passwordConfirm = ref('')
 const showPassword = ref(false)
 const showPasswordConfirm = ref(false)
 const isLoading = ref(false)
-const successMessage = ref('')
 const errorMessage = ref('')
 
-const emailRules = [
-  (v: string) => !!v || VALIDATION_MESSAGES.emailRequired,
-  (v: string) => /.+@.+\..+/.test(v) || VALIDATION_MESSAGES.emailInvalid,
-]
-
-const passwordRules = [
-  (v: string) => !!v || VALIDATION_MESSAGES.passwordRequired,
-  (v: string) => v.length >= 6 || VALIDATION_MESSAGES.passwordMinLength,
-]
-
-const passwordConfirmRules = [
-  (v: string) => !!v || VALIDATION_MESSAGES.passwordConfirmRequired,
-  (v: string) => v === password.value || VALIDATION_MESSAGES.passwordMismatch,
-]
-
-const isFormValid = computed(() => {
-  return password.value.length >= 6 && passwordConfirm.value === password.value
+const { handleSubmit, meta } = useForm({
+  initialValues: {
+    email: email.value ?? '',
+    password: '',
+    passwordConfirm: '',
+  },
 })
 
-const handleSubmit = async () => {
-  if (!isFormValid.value) {
-    errorMessage.value = VALIDATION_MESSAGES.passwordInvalid
-    return
-  }
+const { value: emailInput, errorMessage: emailError } = useField<string>('email', (value) => {
+  if (!value) return VALIDATION_MESSAGES.emailRequired
+  if (!isValidEmail(value)) return VALIDATION_MESSAGES.emailInvalid
+  return true
+})
 
+const { value: password, errorMessage: passwordError } = useField<string>('password', (value) => {
+  if (!value) return VALIDATION_MESSAGES.passwordRequired
+  if (value.length < 6) return VALIDATION_MESSAGES.passwordMinLength
+  return true
+})
+
+const {
+  value: passwordConfirm,
+  errorMessage: passwordConfirmError,
+  validate: validatePasswordConfirm,
+} = useField<string>('passwordConfirm', (value) => {
+  if (!value) return VALIDATION_MESSAGES.passwordConfirmRequired
+  if (value !== password.value) return VALIDATION_MESSAGES.passwordMismatch
+  return true
+})
+
+watch(password, () => {
+  if (passwordConfirm.value) validatePasswordConfirm()
+})
+
+const isFormValid = computed(() => meta.value.valid && meta.value.dirty)
+
+const onSubmit = handleSubmit(async (values) => {
   isLoading.value = true
   errorMessage.value = ''
-  successMessage.value = ''
 
   try {
     const config = useRuntimeConfig()
@@ -154,35 +151,20 @@ const handleSubmit = async () => {
         'Content-Type': 'application/json',
       },
       body: {
-        Email: emailInput.value,
-        Password: password.value,
-        ConfirmPassword: passwordConfirm.value,
+        Email: values.email,
+        Password: values.password,
+        ConfirmPassword: values.passwordConfirm,
         Code: code.value,
       },
     })
 
     await navigateTo('/reset-password-complete')
   } catch (error: unknown) {
-    const fetchError = error as {
-      status?: number
-      data?: {
-        message?: string
-        errors?: Record<string, string[]>
-      }
-    }
-    if (fetchError.status && fetchError.status >= 500) {
-      errorMessage.value = ERROR_MESSAGES.serverError
-    } else if (fetchError.data?.errors) {
-      errorMessage.value = Object.values(fetchError.data.errors).flat().join('\n')
-    } else if (fetchError.data?.message) {
-      errorMessage.value = fetchError.data.message
-    } else {
-      errorMessage.value = ERROR_MESSAGES.generic
-    }
+    errorMessage.value = getApiErrorMessage(error)
   } finally {
     isLoading.value = false
   }
-}
+})
 
 useHead({
   title: PAGE_TITLES.resetPassword,

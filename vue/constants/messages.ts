@@ -14,5 +14,4 @@ export const VALIDATION_MESSAGES = {
   passwordMinLength: 'パスワードは6文字以上で入力してください',
   passwordConfirmRequired: 'パスワード（確認）は必須です',
   passwordMismatch: 'パスワードが一致しません',
-  passwordInvalid: 'パスワードを正しく入力してください',
 } as const

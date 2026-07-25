@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { ERROR_MESSAGES, VALIDATION_MESSAGES } from '~/constants/messages'
+import { VALIDATION_MESSAGES } from '~/constants/messages'
 import { PAGE_TITLES } from '~/constants/page-titles'
 
 const email = ref('')
@@ -82,12 +82,12 @@ const errorMessage = ref('')
 // Email validation rules
 const emailRules = [
   (v: string) => !!v || VALIDATION_MESSAGES.emailRequired,
-  (v: string) => /.+@.+\..+/.test(v) || VALIDATION_MESSAGES.emailInvalid,
+  (v: string) => isValidEmail(v) || VALIDATION_MESSAGES.emailInvalid,
 ]
 
 // Computed property to check if email is valid
 const isEmailValid = computed(() => {
-  return email.value && /.+@.+\..+/.test(email.value)
+  return email.value && isValidEmail(email.value)
 })
 
 // Handle form submission
@@ -118,22 +118,7 @@ const handleSubmit = async () => {
     // Success response - navigate to confirmation page
     await navigateTo('/forgot-password-confirmation')
   } catch (error: unknown) {
-    const fetchError = error as {
-      status?: number
-      data?: {
-        message?: string
-        errors?: Record<string, string[]>
-      }
-    }
-    if (fetchError.status && fetchError.status >= 500) {
-      errorMessage.value = ERROR_MESSAGES.serverError
-    } else if (fetchError.data?.errors) {
-      errorMessage.value = Object.values(fetchError.data.errors).flat().join('\n')
-    } else if (fetchError.data?.message) {
-      errorMessage.value = fetchError.data.message
-    } else {
-      errorMessage.value = ERROR_MESSAGES.generic
-    }
+    errorMessage.value = getApiErrorMessage(error)
   } finally {
     isLoading.value = false
   }
