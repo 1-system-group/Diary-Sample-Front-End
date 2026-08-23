@@ -1,16 +1,16 @@
 <template>
   <v-container class="pa-4" fluid>
-    <div class="confirmation-container">
+    <div class="complete-container">
       <div class="d-flex align-center mb-4">
-        <v-icon size="large" class="mr-2">mdi-key</v-icon>
-        <span class="text-h5 font-weight-bold">PLEASE CHECK YOUR EMAIL TO RESET YOUR PASSWORD</span>
+        <v-icon size="large" class="mr-2">mdi-lock-check</v-icon>
+        <span class="text-h5 font-weight-bold">PASSWORD RESET COMPLETE</span>
       </div>
 
       <v-divider class="mb-4" />
 
       <div class="text-body-1 mb-6">
-        パスワードリセット用のメールを送信しました。<br >
-        ご確認ください。
+        パスワードのリセットが完了しました。<br >
+        新しいパスワードでログインしてください。
       </div>
 
       <div class="d-flex justify-start">
@@ -23,14 +23,13 @@
 <script setup lang="ts">
 import { PAGE_TITLES } from '~/constants/page-titles'
 
-// Set page meta
 useHead({
-  title: PAGE_TITLES.forgotPasswordConfirmation,
+  title: PAGE_TITLES.resetPasswordComplete,
 })
 </script>
 
 <style scoped>
-.confirmation-container {
+.complete-container {
   width: 100%;
 }
 </style>

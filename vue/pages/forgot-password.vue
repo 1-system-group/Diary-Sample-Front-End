@@ -71,6 +71,9 @@
 </template>
 
 <script setup lang="ts">
+import { VALIDATION_MESSAGES } from '~/constants/messages'
+import { PAGE_TITLES } from '~/constants/page-titles'
+
 const email = ref('')
 const isLoading = ref(false)
 const successMessage = ref('')
@@ -78,19 +81,19 @@ const errorMessage = ref('')
 
 // Email validation rules
 const emailRules = [
-  (v: string) => !!v || 'メールアドレスは必須です',
-  (v: string) => /.+@.+\..+/.test(v) || '有効なメールアドレスを入力してください',
+  (v: string) => !!v || VALIDATION_MESSAGES.emailRequired,
+  (v: string) => isValidEmail(v) || VALIDATION_MESSAGES.emailInvalid,
 ]
 
 // Computed property to check if email is valid
 const isEmailValid = computed(() => {
-  return email.value && /.+@.+\..+/.test(email.value)
+  return email.value && isValidEmail(email.value)
 })
 
 // Handle form submission
 const handleSubmit = async () => {
   if (!isEmailValid.value) {
-    errorMessage.value = '有効なメールアドレスを入力してください'
+    errorMessage.value = VALIDATION_MESSAGES.emailInvalid
     return
   }
 
@@ -115,13 +118,7 @@ const handleSubmit = async () => {
     // Success response - navigate to confirmation page
     await navigateTo('/forgot-password-confirmation')
   } catch (error: unknown) {
-    // Handle different error scenarios
-    const fetchError = error as { status?: number }
-    if (fetchError.status && fetchError.status >= 500) {
-      errorMessage.value = 'サーバーエラーが発生しました。しばらく時間をおいて再度お試しください'
-    } else {
-      errorMessage.value = 'エラーが発生しました。再度お試しください'
-    }
+    errorMessage.value = getApiErrorMessage(error)
   } finally {
     isLoading.value = false
   }
@@ -129,7 +126,7 @@ const handleSubmit = async () => {
 
 // Set page meta
 useHead({
-  title: 'パスワードリセット',
+  title: PAGE_TITLES.forgotPassword,
 })
 </script>
 
