@@ -1,10 +1,9 @@
-import {useEffect, useRef, useState} from 'react'
+import {useState} from 'react'
 import { useNavigate } from "react-router-dom"
 import CreateButton from './CreateButton.js'
 import { APP_CONST } from "./Constants"
 import Header from './Header.js'
 import Footer from './Footer.js'
-import { Modal } from 'bootstrap'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
@@ -102,78 +101,73 @@ function NewEntry() {
                     管理
                 </h3>
                 <div>
-                    <h4></h4>
                     <hr />
                     <div className="row">
                         <div className="col-md-3">
                             <ul className="nav nav-pills flex-column">
-                                <li className="nav-item"><a className="nav-link manage_theme" id="manage_account">アカウント管理</a></li>
+                                <li className="nav-item"><div className="nav-link manage_theme" id="manage_account">アカウント管理</div></li>
                             </ul>
                         </div>
                         <div className="col-md-5">
-                            <form>
-                                <div className="d-grid gap-1 border-bottom">
-                                    <div className="form-group p-2">
-                                        <label>
-                                        <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-person-fill icon-color" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                                        </svg>
-                                            ユーザ名
-                                        </label>
-                                        <input className="form-control" type="text" placeholder="名前を入力してください" />
-                                    </div>
-                                    <div className="form-group p-1">
-                                        <label>
-                                        <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-envelope-fill icon-color" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/>
-                                        </svg>
-                                            Eメールアドレス
-                                        </label>
-                                        <input className="form-control" type="text" placeholder="メールアドレスを入力してください" value={email} onChange={(e) => setEmail(e.target.value)}/>
-                                    </div>
-                                    <div className="form-group p-1">
-                                        <label> <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-telephone-fill icon-color" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" d="M2.267.98a1.636 1.636 0 0 1 2.448.152l1.681 2.162c.309.396.418.913.296 1.4l-.513 2.053a.636.636 0 0 0 .167.604L8.65 9.654a.636.636 0 0 0 .604.167l2.052-.513a1.636 1.636 0 0 1 1.401.296l2.162 1.681c.777.604.849 1.753.153 2.448l-.97.97c-.693.693-1.73.998-2.697.658a17.47 17.47 0 0 1-6.571-4.144A17.47 17.47 0 0 1 .639 4.646c-.34-.967-.035-2.004.658-2.698l.97-.969z"/>
-                                        </svg> 電話番号 </label>
-                                        <input className="form-control" type="tel" placeholder="電話番号を入力してください" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}/>
-                                    </div>
+                            <div className="d-grid gap-1 border-bottom">
+                                <div className="form-group p-2">
+                                    <label>
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-person-fill icon-color" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fillRule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                    </svg>
+                                        ユーザ名
+                                    </label>
+                                    <input className="form-control" type="text" placeholder="名前を入力してください" />
                                 </div>
-                                <div className="d-grid gap-1">
-                                    <div className="form-group p-1">
-                                        <label>
-                                        パスワード 
-                                        </label>
-                                        <input className="form-control" type="password" placeholder="パスワードを入力してください" value={password1} onChange={(e) => setPassword1(e.target.value)} />
-                                    </div>
-                                    <div className="form-group p-1">
-                                        <label>
-                                        パスワード（再入力） 
-                                        </label>
-                                        <input className="form-control" type="password" placeholder="パスワード（再入力）を入力してください" value={password2} onChange={(e) => setPassword2(e.target.value)} />
-                                    </div>
-                                    <span className="password_explain">
-                                    ※パスワードは6文字以上、英字大文字・英字小文字・数字・記号を含んでいる必要があります。
-                                    </span>
+                                <div className="form-group p-1">
+                                    <label>
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-envelope-fill icon-color" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fillRule="evenodd" d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/>
+                                    </svg>
+                                        Eメールアドレス
+                                    </label>
+                                    <input className="form-control" type="text" placeholder="メールアドレスを入力してください" value={email} onChange={(e) => setEmail(e.target.value)}/>
                                 </div>
-                                <div className="modal fade" id="updModal" tabIndex="-1" role="dialog" aria-labelledby="updModalLabel" aria-hidden="true">
-                                    <div className="modal-dialog" role="document">
-                                        <div className="modal-content">
-                                            <div className="modal-header manage_theme_positive">
-                                            <h5 className="modal-title" id="updModalLabel">登録します。よろしいですか？</h5>
-                                            </div>
-                                            <div className="modal-footer">
-                                                <button id="yes" className="btn manage_theme_positive" >はい</button>
-                                                <button id="no" className="btn manage_theme_cancel" data-dismiss="modal">いいえ</button>
-                                            </div>
+                                <div className="form-group p-1">
+                                    <label> <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-telephone-fill icon-color" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fillRule="evenodd" d="M2.267.98a1.636 1.636 0 0 1 2.448.152l1.681 2.162c.309.396.418.913.296 1.4l-.513 2.053a.636.636 0 0 0 .167.604L8.65 9.654a.636.636 0 0 0 .604.167l2.052-.513a1.636 1.636 0 0 1 1.401.296l2.162 1.681c.777.604.849 1.753.153 2.448l-.97.97c-.693.693-1.73.998-2.697.658a17.47 17.47 0 0 1-6.571-4.144A17.47 17.47 0 0 1 .639 4.646c-.34-.967-.035-2.004.658-2.698l.97-.969z"/>
+                                    </svg> 電話番号 </label>
+                                    <input className="form-control" type="tel" placeholder="電話番号を入力してください" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}/>
+                                </div>
+                            </div>
+                            <div className="d-grid gap-1">
+                                <div className="form-group p-1">
+                                    <label>
+                                    パスワード 
+                                    </label>
+                                    <input className="form-control" type="password" placeholder="パスワードを入力してください" value={password1} onChange={(e) => setPassword1(e.target.value)} />
+                                </div>
+                                <div className="form-group p-1">
+                                    <label>
+                                    パスワード（再入力） 
+                                    </label>
+                                    <input className="form-control" type="password" placeholder="パスワード（再入力）を入力してください" value={password2} onChange={(e) => setPassword2(e.target.value)} />
+                                </div>
+                                <span className="password_explain">
+                                ※パスワードは6文字以上、英字大文字・英字小文字・数字・記号を含んでいる必要があります。
+                                </span>
+                            </div>
+                            <div className="modal fade" id="updModal" tabIndex="-1" role="dialog" aria-labelledby="updModalLabel" aria-hidden="true">
+                                <div className="modal-dialog" role="document">
+                                    <div className="modal-content">
+                                        <div className="modal-header manage_theme_positive">
+                                        <h5 className="modal-title" id="updModalLabel">登録します。よろしいですか？</h5>
+                                        </div>
+                                        <div className="modal-footer">
+                                            <button id="yes" className="btn manage_theme_positive" >はい</button>
+                                            <button id="no" className="btn manage_theme_cancel" data-dismiss="modal">いいえ</button>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                             <div className="form-group p-2">
                                 <CreateButton createYes={createYes} />
-                                <form method="get">
-                                    <button id="back" className="btn btn-sm manage_theme_cancel" onClick={back} >戻る</button>
-                                </form>
+                                <button id="back" className="btn btn-sm manage_theme_cancel" onClick={back} >戻る</button>
                             </div>
                         </div>
                         <div className="col-md-4">

@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react'
+import {useRef} from 'react'
 import { Modal } from 'bootstrap'
 
 // 登録ボタン（管理画面登録）
@@ -34,7 +34,7 @@ function CreateButton({createYes}) {
 
     return (
         <div>
-            <button id="create" class="btn btn-sm manage_theme" data-toggle="modal" data-target="#updModal" onClick={() => handleShowModal()} >登録</button>
+            <button id="create" className="btn btn-sm manage_theme" data-toggle="modal" data-target="#updModal" onClick={() => handleShowModal()} >登録</button>
 
             <div
                 className="modal fade"
@@ -52,8 +52,8 @@ function CreateButton({createYes}) {
                             登録します。よろしいですか？
                         </div>
                         <div className="modal-footer">
-                            <button class="btn btn-primary" onClick={() => clickCreateYes()}>はい</button>
-                            <button class="btn btn-secondary" data-dismiss="modal" onClick={() => handleCloseModal()}>いいえ</button>
+                            <button className="btn btn-primary" onClick={() => clickCreateYes()}>はい</button>
+                            <button className="btn btn-secondary" data-dismiss="modal" onClick={() => handleCloseModal()}>いいえ</button>
                         </div>
                     </div>
                 </div>

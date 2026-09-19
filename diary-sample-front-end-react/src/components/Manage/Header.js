@@ -1,19 +1,13 @@
-import { useNavigate, Link } from "react-router-dom"
+import {Link } from "react-router-dom"
 
 function Header() {
-
-    const navigate = useNavigate()
-
-    const manage = () => {
-        navigate("/Manage");
-    }
 
     return (
         <div>
             <header>
                 <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom mb-3 p-0 manage_theme">
                     <div className="container">
-                        <a className="navbar-brand text-light">日記</a>
+                        <div className="navbar-brand text-light">日記</div>
                         <button className="navbar-toggler text-light" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                                 aria-expanded="false" aria-label="Toggle navigation">
                             <span className="navbar-toggler-icon"></span>
@@ -37,12 +31,10 @@ function Header() {
                                 </li>
                             </ul>
                             <ul className="navbar-nav">
-                                <form className="form-inline" asp-controller="Auth" asp-action="Logout" method="post" >
-                                    <li className="nav-item">
-                                        {/* TODO 遷移先未設定 */}
-                                        <button id="Logout" type="submit" className="nav-link btn btn-link text-light">ログアウト</button>
-                                    </li>
-                                </form>
+                                <li className="nav-item">
+                                    {/* TODO 遷移先未設定 */}
+                                    <button id="Logout" type="submit" className="nav-link btn btn-link text-light">ログアウト</button>
+                                </li>
                             </ul>
                         </div>
                     </div>

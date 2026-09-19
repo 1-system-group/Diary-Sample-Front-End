@@ -1,7 +1,6 @@
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useState, useCallback} from 'react'
 import { useNavigate } from "react-router-dom"
 import { APP_CONST } from "./Constants"
-import ManageItem from '../../types/Manage.js'
 import UnlockButton from './UnlockButton.js'
 import Header from './Header.js'
 import Footer from './Footer.js'
@@ -17,18 +16,6 @@ function Manage() {
 
     const navigate = useNavigate()
 
-    const defaultList:ManageItem[] = [{
-        no : null,
-        userId: null,
-        userName: null,
-        email: null,
-        emailConfirmed: null,
-        telNo: null,
-        lockStatus: null,
-        failCount: null,
-        lockOut: null,
-    }]
-
     // 一覧の表示データ
     const [list, setList] = useState([])
     // 最大ページ数
@@ -38,7 +25,7 @@ function Manage() {
     const [existPrevPage, setExistPrevPage] = useState(true)
     const [existNextPage, setExistNextPage] = useState(true)
     // 一覧の件数
-    const [listCount, setListCount] = useState([])
+    const [listCount, setListCount] = useState([0])
 
     //TODO 認証はいったん無しにしておく
     const token = ""
@@ -105,10 +92,10 @@ function Manage() {
     }
 
     // 一覧取得
-    const getList = async () => {
+    const getList = useCallback(async () => {
         const apiResponse = await apiGetRequest(`${APP_CONST.API_URL}:${APP_CONST.API_PORT}/api/v1/ManageApi/Index`)
         responseCommon(apiResponse)
-    }
+    }, [])
 
     // ページ移動
     const clickPaging = async (e, pageNum) => {
@@ -129,6 +116,16 @@ function Manage() {
         setListCount(jsonUsers.length)
         setPageNum(jsonTotalPageNumber)
         setNowPage(jsonNowPage)
+        if (jsonNowPage > 1) {
+            setExistPrevPage(true)
+        } else {
+            setExistPrevPage(false)
+        }
+        if ((jsonNowPage < jsonTotalPageNumber) && (jsonTotalPageNumber > 1)){
+            setExistNextPage(true)
+        } else {
+            setExistNextPage(false)
+        }
     }
 
     const newEntry = () => {
@@ -138,20 +135,20 @@ function Manage() {
     // 画面表示時	
     useEffect(() => {
         getList()
-    }, [])
+    }, [getList])
     
     return (
         <div>
             <Header/>
-            <div class="container">
-                <main class="pb-3">
+            <div className="container">
+                <main className="pb-3">
                     <h3><img src="../../img/gear.svg" alt="" width="32" height="32" title="management"/>管理</h3>
                     <div>
                         <hr />
                         <div className="row">
                             <div className="col-md-3">
                                 <ul className="nav nav-pills flex-column">
-                                    <li className="nav-item"><a className="nav-link manage_theme" id="manage_account" asp-area="" asp-controller="Manage" asp-action="Index">アカウント管理</a></li>
+                                    <li className="nav-item"><div className="nav-link manage_theme" id="manage_account" >アカウント管理</div></li>
                                 </ul>
                             </div>
                             <div className="col-md-9">
@@ -200,19 +197,19 @@ function Manage() {
                                         <ul className="pagination justify-content-end">
                                             {existPrevPage ?
                                                 <li className="page-item">
-                                                    <a className="page-link text-secondary" onClick={(e) => clickPaging(e, 1)}>&lt;&lt;</a>
+                                                    <div className="page-link text-secondary" onClick={(e) => clickPaging(e, 1)}>&lt;&lt;</div>
                                                 </li>
                                             : null}
                                             {Array.from({ length: pageNum }, (_, i) => {
                                                 if ((i + 1) === nowPage) {
-                                                    return <li className="page-item"><a className="page-link manage_theme" onClick={(e) => clickPaging(e, i + 1)}>{i + 1}</a></li>
+                                                    return <li className="page-item"><div className="page-link manage_theme" onClick={(e) => clickPaging(e, i + 1)}>{i + 1}</div></li>
                                                 } else {
-                                                    return <li className="page-item"><a className="page-link text-secondary" onClick={(e) => clickPaging(e, i + 1)}>{i + 1}</a></li>
+                                                    return <li className="page-item"><div className="page-link text-secondary" onClick={(e) => clickPaging(e, i + 1)}>{i + 1}</div></li>
                                                 }
                                             })}
                                             {existNextPage ?
                                                 <li className="page-item">
-                                                    <a className="page-link text-secondary" onClick={(e) => clickPaging(e, pageNum)} >&gt;&gt;</a>
+                                                    <div className="page-link text-secondary" onClick={(e) => clickPaging(e, pageNum)} >&gt;&gt;</div>
                                                 </li>
                                             : null}
                                         </ul>
