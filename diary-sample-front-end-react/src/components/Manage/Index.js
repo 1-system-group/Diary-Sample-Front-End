@@ -116,6 +116,7 @@ function Manage() {
         setListCount(jsonUsers.length)
         setPageNum(jsonTotalPageNumber)
         setNowPage(jsonNowPage)
+
         if (jsonNowPage > 1) {
             setExistPrevPage(true)
         } else {
@@ -197,7 +198,7 @@ function Manage() {
                                         <ul className="pagination justify-content-end">
                                             {existPrevPage ?
                                                 <li className="page-item">
-                                                    <div className="page-link text-secondary" onClick={(e) => clickPaging(e, 1)}>&lt;&lt;</div>
+                                                    <div className="page-link text-secondary" onClick={(e) => clickPaging(e, nowPage - 1)}>&lt;&lt;</div>
                                                 </li>
                                             : null}
                                             {Array.from({ length: pageNum }, (_, i) => {
@@ -209,7 +210,7 @@ function Manage() {
                                             })}
                                             {existNextPage ?
                                                 <li className="page-item">
-                                                    <div className="page-link text-secondary" onClick={(e) => clickPaging(e, pageNum)} >&gt;&gt;</div>
+                                                    <div className="page-link text-secondary" onClick={(e) => clickPaging(e, nowPage + 1)} >&gt;&gt;</div>
                                                 </li>
                                             : null}
                                         </ul>
