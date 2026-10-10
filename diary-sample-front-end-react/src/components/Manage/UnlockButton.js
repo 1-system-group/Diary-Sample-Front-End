@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react'
+import {useRef} from 'react'
 import { Modal } from 'bootstrap'
 
 // 解除ボタン（管理画面一覧）
