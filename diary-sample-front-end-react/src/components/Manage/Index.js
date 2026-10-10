@@ -192,7 +192,7 @@ function Manage() {
                                 </div>
                                 <div className="row">
                                     <div className="col-2">
-                                        <button id="newEntry" className="btn btn-sm manage_theme" onClick={newEntry}>登録</button>
+                                        <button type="button" id="newEntry" className="btn btn-sm manage_theme" onClick={newEntry}>登録</button>
                                     </div>
                                     <div className="col-10">
                                         <ul className="pagination justify-content-end">

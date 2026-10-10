@@ -34,7 +34,7 @@ function CreateButton({createYes}) {
 
     return (
         <div>
-            <button id="create" className="btn btn-sm manage_theme" data-toggle="modal" data-target="#updModal" onClick={() => handleShowModal()} >登録</button>
+            <button type="button" id="create" className="btn btn-sm manage_theme" data-toggle="modal" data-target="#updModal" onClick={() => handleShowModal()} >登録</button>
 
             <div
                 className="modal fade"
@@ -52,8 +52,8 @@ function CreateButton({createYes}) {
                             登録します。よろしいですか？
                         </div>
                         <div className="modal-footer">
-                            <button className="btn btn-primary" onClick={() => clickCreateYes()}>はい</button>
-                            <button className="btn btn-secondary" data-dismiss="modal" onClick={() => handleCloseModal()}>いいえ</button>
+                            <button type="button" className="btn btn-primary" onClick={() => clickCreateYes()}>はい</button>
+                            <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => handleCloseModal()}>いいえ</button>
                         </div>
                     </div>
                 </div>

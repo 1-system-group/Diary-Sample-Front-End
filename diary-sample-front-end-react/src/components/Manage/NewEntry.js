@@ -159,15 +159,15 @@ function NewEntry() {
                                         <h5 className="modal-title" id="updModalLabel">登録します。よろしいですか？</h5>
                                         </div>
                                         <div className="modal-footer">
-                                            <button id="yes" className="btn manage_theme_positive" >はい</button>
-                                            <button id="no" className="btn manage_theme_cancel" data-dismiss="modal">いいえ</button>
+                                            <button type="button" id="yes" className="btn manage_theme_positive" >はい</button>
+                                            <button type="button" id="no" className="btn manage_theme_cancel" data-dismiss="modal">いいえ</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="form-group p-2">
                                 <CreateButton createYes={createYes} />
-                                <button id="back" className="btn btn-sm manage_theme_cancel" onClick={back} >戻る</button>
+                                <button type="button" id="back" className="btn btn-sm manage_theme_cancel" onClick={back} >戻る</button>
                             </div>
                         </div>
                         <div className="col-md-4">
