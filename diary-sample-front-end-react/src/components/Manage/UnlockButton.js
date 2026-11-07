@@ -64,8 +64,8 @@ function UnlockButton({lockOut, userId, displayMessage, unlockYes}) {
                                 ロックを解除します。よろしいですか？
                             </div>
                             <div className="modal-footer">
-                                <button type="button" class="btn btn-primary" onClick={() => clickUnlockYes()}>はい</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick={() => handleCloseModal()}>いいえ</button>
+                                <button type="button" className="btn btn-primary" onClick={() => clickUnlockYes()}>はい</button>
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => handleCloseModal()}>いいえ</button>
                             </div>
                         </div>
                     </div>

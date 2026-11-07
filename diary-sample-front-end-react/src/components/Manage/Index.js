@@ -25,7 +25,7 @@ function Manage() {
     const [existPrevPage, setExistPrevPage] = useState(true)
     const [existNextPage, setExistNextPage] = useState(true)
     // 一覧の件数
-    const [listCount, setListCount] = useState([0])
+    const [listCount, setListCount] = useState(0)
 
     //TODO 認証はいったん無しにしておく
     const token = ""

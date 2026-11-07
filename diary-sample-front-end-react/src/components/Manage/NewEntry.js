@@ -152,19 +152,6 @@ function NewEntry() {
                                 ※パスワードは6文字以上、英字大文字・英字小文字・数字・記号を含んでいる必要があります。
                                 </span>
                             </div>
-                            <div className="modal fade" id="updModal" tabIndex="-1" role="dialog" aria-labelledby="updModalLabel" aria-hidden="true">
-                                <div className="modal-dialog" role="document">
-                                    <div className="modal-content">
-                                        <div className="modal-header manage_theme_positive">
-                                        <h5 className="modal-title" id="updModalLabel">登録します。よろしいですか？</h5>
-                                        </div>
-                                        <div className="modal-footer">
-                                            <button type="button" id="yes" className="btn manage_theme_positive" >はい</button>
-                                            <button type="button" id="no" className="btn manage_theme_cancel" data-dismiss="modal">いいえ</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div className="form-group p-2">
                                 <CreateButton createYes={createYes} />
                                 <button type="button" id="back" className="btn btn-sm manage_theme_cancel" onClick={back} >戻る</button>
