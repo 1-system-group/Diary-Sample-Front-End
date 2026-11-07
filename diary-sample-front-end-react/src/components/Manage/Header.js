@@ -13,7 +13,7 @@ function Header() {
                             <span className="navbar-toggler-icon"></span>
                         </button>
                         <div className="navbar-collapse collapse">
-                            <ul className="navbar-nav mr-auto">
+                            <ul className="navbar-nav me-auto">
                                 <li className="nav-item">
                                     {/* TODO 遷移先未設定 */}
                                     <Link to="/" className="nav-link text-light" >Home</Link>
