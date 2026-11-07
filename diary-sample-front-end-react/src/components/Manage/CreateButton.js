@@ -34,7 +34,7 @@ function CreateButton({createYes}) {
 
     return (
         <div>
-            <button type="button" id="create" className="btn btn-sm manage_theme" data-toggle="modal" data-target="#updModal" onClick={() => handleShowModal()} >登録</button>
+            <button type="button" id="create" className="btn btn-sm manage_theme" data-bs-toggle="modal" data-bs-target="#updModal" onClick={() => handleShowModal()} >登録</button>
 
             <div
                 className="modal fade"
